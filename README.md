@@ -1,2 +1,3 @@
 # spring-boot-transactional-testing
-some test to test spring-boot-transactional annotation
+@Transactional Annotation needed on Service Layer Method level to ensure that a transaction is made.
+Calling the Controller does not automatically create a transaction
