@@ -22,7 +22,7 @@ public class TheAspect {
   private void carDeletion() {}
 
   @After("carDeletion()&& args(car)")
-  public void writeToCarHistoryTable(Car car) {
+  public void auditCar(Car car) {
     final var carAudit = new CarAudit();
     carAudit.deletedCarId(car.id());
     carAuditRepository.save(carAudit);
