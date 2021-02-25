@@ -23,8 +23,8 @@ public class TransactionServiceLayerTest {
 
   @Test
   @DisplayName(
-      "given transactional when one entity is saved but the other throws error then nothing is saved")
-  void givenTransactionalWhenOneEntityIsSavedButTheOtherThrowsErrorThenNothingIsSaved() {
+      "given transactional when one entity is saved but the other throws error then transaction rollback")
+  void givenTransactionalWhenOneEntityIsSavedButTheOtherThrowsErrorThenTransactionRollback() {
     // given
     when(carRepository.save(any())).thenThrow(new RuntimeException());
     // when

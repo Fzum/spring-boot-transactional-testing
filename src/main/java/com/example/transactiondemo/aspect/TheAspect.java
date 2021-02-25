@@ -1,8 +1,8 @@
 package com.example.transactiondemo.aspect;
 
+import com.example.transactiondemo.entity.Car;
 import com.example.transactiondemo.entity.CarAudit;
 import com.example.transactiondemo.repository.CarAuditRepository;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -21,9 +21,10 @@ public class TheAspect {
   @Pointcut("execution(* com.example.transactiondemo.repository.CarRepository.delete(..))")
   private void carDeletion() {}
 
-  @After("carDeletion()")
-  public void writeToCarHistoryTable(JoinPoint joinPoint) {
-    System.out.println(joinPoint);
-    carAuditRepository.save(new CarAudit());
+  @After("carDeletion()&& args(car)")
+  public void writeToCarHistoryTable(Car car) {
+    final var carAudit = new CarAudit();
+    carAudit.deletedCarId(car.id());
+    carAuditRepository.save(carAudit);
   }
 }

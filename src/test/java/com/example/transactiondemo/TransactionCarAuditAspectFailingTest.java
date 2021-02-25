@@ -22,8 +22,8 @@ public class TransactionCarAuditAspectFailingTest {
 
   @Test
   @DisplayName(
-      "given transactional when aspect fails to write to audit table then nothing is saved")
-  void givenTransactionalWhenAspectFailsToWriteToAuditTableThenNothingIsSaved() {
+      "given transactional when aspect fails to write to audit table then transaction rollback")
+  void givenTransactionalWhenAspectFailsToWriteToAuditTableThenTransactionIsRollback() {
     // given
     when(carAuditRepository.save(any())).thenThrow(new RuntimeException());
     try {

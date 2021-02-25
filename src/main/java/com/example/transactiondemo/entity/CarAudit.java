@@ -12,4 +12,6 @@ import javax.persistence.Id;
 @Accessors(fluent = true)
 public class CarAudit {
   @Id @GeneratedValue private Long id;
+
+  private Long deletedCarId;
 }
