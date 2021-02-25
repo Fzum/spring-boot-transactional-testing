@@ -19,18 +19,34 @@ public class TheService {
 
   @Transactional
   public void saveCarAndBikeTransactional() {
-    saveSomeStuff();
-  }
-
-  public void saveCarAndBikeNonTransactional() {
-    saveSomeStuff();
-  }
-
-  private void saveSomeStuff() {
     bikeRepository.save(new Bike());
     bikeRepository.save(new Bike());
 
     carRepository.save(new Car());
+  }
+
+  public void saveCarAndBikeNonTransactional() {
+    bikeRepository.save(new Bike());
+    bikeRepository.save(new Bike());
+
+    carRepository.save(new Car());
+  }
+
+  @Transactional
+  public void saveAndDeleteTransactional() {
+    bikeRepository.save(new Bike());
+    bikeRepository.save(new Bike());
+
+    final Car savedCar = carRepository.save(new Car());
+    carRepository.delete(savedCar);
+  }
+
+  public void saveAndDeleteNonTransactional() {
+    bikeRepository.save(new Bike());
+    bikeRepository.save(new Bike());
+
+    final Car savedCar = carRepository.save(new Car());
+    carRepository.delete(savedCar);
   }
 
   public List<Bike> getBikes() {

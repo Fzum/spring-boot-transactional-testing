@@ -1,6 +1,6 @@
 package com.example.transactiondemo;
 
-import com.example.transactiondemo.repository.CarRepository;
+import com.example.transactiondemo.repository.CarAuditRepository;
 import com.example.transactiondemo.service.TheService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,25 +11,23 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class TransactionTestServiceLayer {
-
-  @MockBean private CarRepository carRepository;
+public class TransactionCarAuditAspectFailingTest {
+  @MockBean private CarAuditRepository carAuditRepository;
   @Autowired @InjectMocks private TheService service;
 
   @Test
   @DisplayName(
-      "given transactional when one entity is saved but the other throws error then nothing is saved")
-  void givenTransactionalWhenOneEntityIsSavedButTheOtherThrowsErrorThenNothingIsSaved() {
+      "given transactional when aspect fails to write to audit table then nothing is saved")
+  void givenTransactionalWhenAspectFailsToWriteToAuditTableThenNothingIsSaved() {
     // given
-    when(carRepository.save(any())).thenThrow(new RuntimeException());
-    // when
+    when(carAuditRepository.save(any())).thenThrow(new RuntimeException());
     try {
-      service.saveCarAndBikeTransactional();
+      service.saveAndDeleteTransactional();
     } catch (Exception ignored) {
     }
     // then
@@ -38,13 +36,12 @@ public class TransactionTestServiceLayer {
 
   @Test
   @DisplayName(
-      "given no transaction when one entity is saved but the other throws error then one is saved")
-  void givenNoTransactionWhenOneEntityIsSavedButTheOtherThrowsErrorThenOneIsSaved() {
+      "given non transactional when aspect fails to write to audit table then data is saved inconsistently")
+  void givenNonTransactionalWhenAspectFailsToWriteToAuditTableThenDataIsSavedInconsistently() {
     // given
-    when(carRepository.save(any())).thenThrow(new RuntimeException());
-    // when
+    when(carAuditRepository.save(any())).thenThrow(new RuntimeException());
     try {
-      service.saveCarAndBikeNonTransactional();
+      service.saveAndDeleteNonTransactional();
     } catch (Exception ignored) {
     }
     // then
